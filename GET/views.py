@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 from flask import render_template, Blueprint, request
 from json import JSONDecodeError
-from utils import Posts, Comments, read_file, posts_wish_teg
+from utils import Posts, Comments, read_file, posts_wish_teg, search_posts_for_tag
 
 get_blueprint = Blueprint('get_blueprint', __name__, template_folder='templates')
 
@@ -63,7 +64,7 @@ def search_posts_for_query():
 @get_blueprint.route('/tag/<tag_name>')
 def search_posts_for_teg(tag_name):
     """"Страница с постами по тегу"""
-    query = f'#{tag_name}'
-    posts = class_posts.search_for_posts(query)
-    posts_with_teg = posts_wish_teg(posts)
-    return render_template('tag.html', posts=posts_with_teg, query=tag_name)
+    posts = class_posts.get_posts_all()
+    new_posts = posts_wish_teg(posts)
+    search_posts = search_posts_for_tag(new_posts, tag_name)
+    return render_template('tag.html', posts=search_posts, query=tag_name)

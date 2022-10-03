@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Blueprint, jsonify
 from json import JSONDecodeError
 from utils import Posts, Comments
@@ -6,7 +7,10 @@ import logging
 api_logger = logging.getLogger()
 
 console_handler = logging.StreamHandler()
-file_handler = logging.FileHandler("api.txt")
+file_handler = logging.FileHandler("logs/api.log")
+
+console_handler.setLevel(logging.DEBUG)
+file_handler.setLevel(logging.DEBUG)
 
 formatter_one = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
 
@@ -37,7 +41,7 @@ except JSONDecodeError:
 @api_blueprint.route('/posts')
 def posts_all_api():
     """Выводит json всех постов"""
-    api_logger.warning("Запрос /api/posts")
+    api_logger.info("Запрос /api/posts")
     posts = class_posts.get_posts_all()
     return jsonify(posts)
 
@@ -46,7 +50,7 @@ def posts_all_api():
 def post_by_pk(pk):
     """Выводит json поста по id"""
     post = class_posts.get_post_by_pk(pk)
-    api_logger.warning(f"Запрос /api/posts/{pk}")
+    api_logger.info(f"Запрос /api/posts/{pk}")
     return jsonify(post)
 
 
@@ -54,5 +58,5 @@ def post_by_pk(pk):
 def comments_by_post_id(post_id):
     """Выводит json коментариые к посту по id"""
     comments = class_comments.get_comments_by_post_id(post_id, class_posts.unique_post_id)
-    api_logger.warning(f"Запрос /api/comments/{post_id}")
+    api_logger.info(f"Запрос /api/comments/{post_id}")
     return jsonify(comments)

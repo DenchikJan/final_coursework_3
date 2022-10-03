@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask
 from GET.views import get_blueprint
 from API.views import api_blueprint

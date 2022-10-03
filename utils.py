@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 import json
 
 
-def posts_wish_teg(content, key_name='content'):
+def posts_wish_teg(content: list, key_name='content') -> list:
     """
     Принимает список из словарей и ключ поля,
     ишет в элементе словаря с ключем  key_name слова начинающиеся с #
@@ -23,7 +24,7 @@ def posts_wish_teg(content, key_name='content'):
     return post_wish_teg
 
 
-def read_file(file_name):
+def read_file(file_name: str) -> list:
     """
     Читает файл file_name
     :param file_name:
@@ -35,7 +36,7 @@ def read_file(file_name):
     return content
 
 
-def write_file_json(file_name, content):
+def write_file_json(file_name: str, content: list):
     """
     Переписывает файл file_name данными content
     :param file_name:
@@ -46,7 +47,7 @@ def write_file_json(file_name, content):
         json.dump(content, file, ensure_ascii=False)
 
 
-def add_post_in_bookmarks(post, file_name='data/bookmarks.json'):
+def add_post_in_bookmarks(post: dict, file_name='data/bookmarks.json'):
     """
     Добавляет данные post в файл file_name
     :param post:
@@ -59,13 +60,16 @@ def add_post_in_bookmarks(post, file_name='data/bookmarks.json'):
         write_file_json(file_name, content)
 
 
-def del_post_from_bookmarks(post_id, file_name='data/bookmarks.json'):
+def del_post_from_bookmarks(post_id: int, file_name='data/bookmarks.json'):
     """
     Удаляет пост по его ID
     :param post_id:
     :param file_name:
     :return:
     """
+
+
+
     content = read_file(file_name)
     if post_id in unique_values(content, 'pk'):
         new_content = []
@@ -75,7 +79,7 @@ def del_post_from_bookmarks(post_id, file_name='data/bookmarks.json'):
         write_file_json(file_name, new_content)
 
 
-def unique_values(values, key):
+def unique_values(values: list, key) -> set:
     """
     В списке из словарей ищет элемент с ключем key
     и возвращает уникальные элементы
@@ -88,6 +92,14 @@ def unique_values(values, key):
         data_list.append(value[key])
     unique_value = set(data_list)
     return unique_value
+
+
+def search_posts_for_tag(posts, tag):
+    search_posts = []
+    for post in posts:
+        if tag in post['teg_words']:
+            search_posts.append(post)
+    return search_posts
 
 
 class Posts:
@@ -105,15 +117,15 @@ class Posts:
         self.unique_post_id = unique_post_id
         self.file_name = file_name
 
-    def get_posts_all(self):
+    def get_posts_all(self) -> list:
         """Выводит все посты"""
         return self.content
 
-    def all_posts_id(self):
+    def all_posts_id(self) -> set:
         """Выводит все уникальные id постов"""
         return self.unique_post_id
 
-    def get_posts_by_user(self, user_name):
+    def get_posts_by_user(self, user_name: str) -> list:
         """Выводит посты пользователя по его имени
         , если имя не существует выдает ошибку"""
         if user_name in self.unique_users_name:
@@ -125,7 +137,7 @@ class Posts:
             return post_for_user
         raise ValueError(f'Пользователя с именем {user_name} не существует')
 
-    def search_for_posts(self, query):
+    def search_for_posts(self, query: str) -> list:
         """Выводит посты в тексте которых присутствует query"""
         posts_for_query = []
         content = self.content
@@ -149,11 +161,11 @@ class Comments:
         content = read_file(file_name)
         self.content = content
 
-    def get_comments_all(self):
+    def get_comments_all(self) -> list:
         """Выводит все комментарии"""
         return self.content
 
-    def get_comments_by_post_id(self, post_id, all_posts_id):
+    def get_comments_by_post_id(self, post_id: int, all_posts_id: set) -> list:
         """Выводит коментарии к посту по его id
         если поста с таким id нет выводит ошибку"""
         if post_id in all_posts_id:
