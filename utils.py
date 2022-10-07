@@ -67,9 +67,6 @@ def del_post_from_bookmarks(post_id: int, file_name='data/bookmarks.json'):
     :param file_name:
     :return:
     """
-
-
-
     content = read_file(file_name)
     if post_id in unique_values(content, 'pk'):
         new_content = []

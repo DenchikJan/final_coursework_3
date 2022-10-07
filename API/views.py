@@ -4,10 +4,17 @@ from json import JSONDecodeError
 from utils import Posts, Comments
 import logging
 
+
+def my_filter(log_record):
+    return log_record.message.startswith('Запрос')
+
+
+logging.basicConfig(level=logging.NOTSET)
 api_logger = logging.getLogger()
 
 console_handler = logging.StreamHandler()
 file_handler = logging.FileHandler("logs/api.log")
+file_handler.addFilter(my_filter)
 
 console_handler.setLevel(logging.DEBUG)
 file_handler.setLevel(logging.DEBUG)
